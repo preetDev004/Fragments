@@ -3,7 +3,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import compression from 'compression';
 import pino from 'pino-http';
-import {author, version} from '../package.json';
+import { author, version } from '../package.json';
 import logger from './logger';
 
 interface AppError extends Error {
@@ -13,7 +13,7 @@ interface AppError extends Error {
 const app = express();
 
 // Use pino logging middleware
-app.use(pino({logger}));
+app.use(pino({ logger }));
 
 // Use helmetjs security middleware
 app.use(helmet());

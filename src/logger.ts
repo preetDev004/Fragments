@@ -13,6 +13,9 @@ if (options.level === 'debug') {
       colorize: true,
     },
   };
+
+  const debugLogger = pino(options);
+  debugLogger.debug(JSON.stringify(process.env, null, 2), "Environment variables");
 }
 
 // Create and export a Pino Logger instance
