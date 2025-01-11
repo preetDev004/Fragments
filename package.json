@@ -7,9 +7,9 @@
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint \"./src/**/*.ts\"",
-    "start": "npx ts-node src/server.ts",
-    "dev": "LOG_LEVEL=debug nodemon ./src/server.ts --watch src",
-    "debug": "LOG_LEVEL=debug nodemon --inspect=0.0.0.0:9229 --exec node -r ts-node/register ./src/server.ts --watch src"
+    "start": "npx ts-node src/index.ts",
+    "dev": "LOG_LEVEL=debug nodemon ./src/index.ts --watch src",
+    "debug": "LOG_LEVEL=debug nodemon --inspect=0.0.0.0:9229 --exec node -r ts-node/register ./src/index.ts --watch src"
   },
   "repository": {
     "type": "git",

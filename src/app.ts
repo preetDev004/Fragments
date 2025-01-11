@@ -5,7 +5,7 @@ import compression from 'compression';
 import pino from 'pino-http';
 import { author, version } from '../package.json';
 import logger from './logger';
-
+import routes from './routes';
 interface AppError extends Error {
   status?: number;
 }
@@ -23,6 +23,8 @@ app.use(cors());
 
 // Use gzip/deflate compression middleware
 app.use(compression());
+
+app.use('/', routes);
 
 // Define a simple health check route. If the server is running
 // we'll respond with a 200 OK.  If not, the server isn't healthy.
