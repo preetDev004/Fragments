@@ -6,6 +6,8 @@ import pino from 'pino-http';
 import { author, version } from '../package.json';
 import logger from './logger';
 import routes from './routes';
+import passport from 'passport';
+import { strategy } from './auth';
 interface AppError extends Error {
   status?: number;
 }
@@ -23,6 +25,9 @@ app.use(cors());
 
 // Use gzip/deflate compression middleware
 app.use(compression());
+
+passport.use(strategy());
+app.use(passport.initialize());
 
 app.use('/', routes);
 

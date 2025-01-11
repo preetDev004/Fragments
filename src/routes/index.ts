@@ -5,6 +5,7 @@ import { version, author } from '../../package.json';
 
 // Import the API routes
 import apiRoutes from './api';
+import { authenticate } from '../auth';
 
 // Create a router to mount our API
 const router = Router();
@@ -12,7 +13,7 @@ const router = Router();
 /**
  * Expose all of our API routes on /v1/* to include an API version.
  */
-router.use('/v1', apiRoutes);
+router.use('/v1', authenticate(), apiRoutes);
 
 /**
  * Define a simple health check route. If the server is running,
