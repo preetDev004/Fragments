@@ -21,5 +21,3 @@ process.on('unhandledRejection', (reason, promise) => {
 });
 
 import "./server";
-
-const unneededVariable = 'This variable is never used';
