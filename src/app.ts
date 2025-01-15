@@ -7,7 +7,7 @@ import { author, version } from '../package.json';
 import logger from './logger';
 import routes from './routes';
 import passport from 'passport';
-import { strategy } from './auth';
+import authModule from './auth/index';
 interface AppError extends Error {
   status?: number;
 }
@@ -24,9 +24,9 @@ app.use(helmet());
 app.use(cors());
 
 // Use gzip/deflate compression middleware
-app.use(compression());
+app.use(compression({threshold : 0}));
 
-passport.use(strategy());
+passport.use(authModule.strategy());
 app.use(passport.initialize());
 
 app.use('/', routes);

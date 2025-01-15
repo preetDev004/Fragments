@@ -20,4 +20,4 @@ process.on('unhandledRejection', (reason, promise) => {
   throw reason;
 });
 
-import "./server";
+import './server';

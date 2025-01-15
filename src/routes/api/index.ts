@@ -2,7 +2,7 @@
  * The main entry point for the v1 version of the fragments API.
  */
 import { Router } from 'express';
-import getFragmentsHandler from './get'
+import getFragmentsHandler from './get';
 
 // Create a router to mount our API endpoints
 const router = Router();
