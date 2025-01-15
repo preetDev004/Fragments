@@ -1,7 +1,14 @@
 import passport from 'passport';
 import { Strategy as BearerStrategy } from 'passport-http-bearer';
 import { CognitoJwtVerifier } from 'aws-jwt-verify';
-import logger from './logger';
+import logger from '../logger';
+import { Strategy } from 'passport';
+import { RequestHandler } from 'express';
+
+// We expect AWS_COGNITO_POOL_ID and AWS_COGNITO_CLIENT_ID to be defined.
+if (!(process.env.AWS_COGNITO_POOL_ID && process.env.AWS_COGNITO_CLIENT_ID)) {
+  throw new Error('missing expected env vars: AWS_COGNITO_POOL_ID and AWS_COGNITO_CLIENT_ID');
+}
 
 // Create a Cognito JWT Verifier, which confirms that any JWT we get from a user is valid and trusted.
 // See: https://github.com/awslabs/aws-jwt-verify#cognitojwtverifier-verify-parameters
@@ -28,7 +35,7 @@ jwtVerifier
 /**
  * Passport strategy for verifying Bearer Tokens using the Cognito JWT Verifier.
  */
-export const strategy = () =>
+export const strategy = (): Strategy =>
   new BearerStrategy(async (token, done) => {
     try {
       // Log the token for debugging
@@ -50,4 +57,5 @@ export const strategy = () =>
 /**
  * Middleware to authenticate requests using Passport and the configured Bearer strategy.
  */
-export const authenticate = () => passport.authenticate('bearer', { session: false });
+export const authenticate = (): RequestHandler =>
+  passport.authenticate('bearer', { session: false });
