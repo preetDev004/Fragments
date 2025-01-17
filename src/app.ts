@@ -8,6 +8,7 @@ import logger from './logger';
 import routes from './routes';
 import passport from 'passport';
 import authModule from './auth/index';
+import { createErrorResponse } from './response';
 interface AppError extends Error {
   status?: number;
 }
@@ -49,13 +50,7 @@ app.get('/', (req, res) => {
 
 // Add 404 middleware to handle any requests for resources that can't be found
 app.use((req, res) => {
-  res.status(404).json({
-    status: 'error',
-    error: {
-      message: 'not found',
-      code: 404,
-    },
-  });
+  res.status(404).json(createErrorResponse(404, 'not found'));
 });
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -70,13 +65,7 @@ app.use((err: AppError, req: Request, res: Response, next: NextFunction) => {
     logger.error({ err }, `Error processing request`);
   }
 
-  res.status(status).json({
-    status: 'error',
-    error: {
-      message,
-      code: status,
-    },
-  });
+  res.status(status).json(createErrorResponse(status, message));
 });
 
 export default app;

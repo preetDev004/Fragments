@@ -24,7 +24,8 @@ describe('API Responses', () => {
     const successResponse = createSuccessResponse(data);
     expect(successResponse).toEqual({
       status: 'ok',
-      data: { a: 1, b: 2 }
+      a: 1,
+      b: 2,
     });
   });
 });

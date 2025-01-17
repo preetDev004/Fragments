@@ -6,6 +6,7 @@ import { version, author } from '../../package.json';
 // Import the API routes
 import apiRoutes from './api';
 import authModule from '../auth/index';
+import { createSuccessResponse } from '../response';
 
 // Create a router to mount our API
 const router = Router();
@@ -24,13 +25,14 @@ router.get('/', (req: Request, res: Response) => {
   res.setHeader('Cache-Control', 'no-cache');
 
   // Send a 200 'OK' response
-  res.status(200).json({
-    status: 'ok',
-    author,
-    // Use your own GitHub URL
-    githubUrl: 'https://github.com/preetDev004/Fragments',
-    version,
-  });
+  res.status(200).json(
+    createSuccessResponse({
+      author,
+      // Use your own GitHub URL
+      githubUrl: 'https://github.com/preetDev004/Fragments',
+      version,
+    })
+  );
 });
 
 export default router;

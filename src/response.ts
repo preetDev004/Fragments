@@ -19,11 +19,11 @@ export interface ErrorResponse {
  *   ...
  * }
  */
-export const createSuccessResponse = (data?: unknown) : SuccessResponse => {
+export const createSuccessResponse = (data?: object) : SuccessResponse => {
   console.log('createSuccessResponse', data);
   return {
     status: 'ok',
-    data,
+   ...data,
   };
 };
 
