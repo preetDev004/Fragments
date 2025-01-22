@@ -1,3 +1,5 @@
+import logger from "./logger";
+
 export interface SuccessResponse {
   status: 'ok';
   data?: unknown;
@@ -8,42 +10,23 @@ export interface ErrorResponse {
   error: {
     code: number;
     message: string;
-  }
+  };
 }
 
-/**
- * A successful response looks like:
- *
- * {
- *   "status": "ok",
- *   ...
- * }
- */
-export const createSuccessResponse = (data?: object) : SuccessResponse => {
-  console.log('createSuccessResponse', data);
+export const createSuccessResponse = (data?: object): SuccessResponse => {
+  logger.info('createSuccessResponse', data);
   return {
     status: 'ok',
-   ...data,
+    ...data,
   };
 };
 
-/**
- * An error response looks like:
- *
- * {
- *   "status": "error",
- *   "error": {
- *     "code": 400,
- *     "message": "invalid request, missing ...",
- *   }
- * }
- */
-export const createErrorResponse = (code: number, message: string) : ErrorResponse => {
+export const createErrorResponse = (code: number, message: string): ErrorResponse => {
   return {
     status: 'error',
-    error : {
+    error: {
       code: code,
-      message: message
-    }
+      message: message,
+    },
   };
 };
