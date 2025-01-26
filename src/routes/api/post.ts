@@ -1,0 +1,46 @@
+import { Request, Response } from 'express';
+import Fragment from '../../model/fragment';
+import { createErrorResponse, createSuccessResponse } from '../../response';
+import logger from '../../logger';
+
+const postFragmentsHandler = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { body } = req;
+    if (!Buffer.isBuffer(body)) {
+      logger.error('Unsupported content type');
+      res.status(415).json(createErrorResponse(415, 'Unsupported content type'));
+      return;
+    }
+    const fragment = new Fragment({
+      ownerId: req.user! as string,
+      type: req.headers['content-type']! as string,
+      size: Buffer.byteLength(body),
+    });
+
+    await fragment.setData(body);
+    await fragment.save();
+    logger.debug({ fragment }, 'Fragment saved');
+
+    const apiUrl = process.env.API_URL || req.protocol + '://' + new URL(req.headers.host!);
+    logger.info({ fragment, apiUrl }, 'Added URL to header');
+
+    res.header('Location', apiUrl + '/v1/fragments');
+    res.status(201).json(
+      createSuccessResponse({
+        fragments: [fragment],
+      })
+    );
+  } catch (error: unknown) {
+    logger.error({ error }, 'Unable to add the fragment');
+    res
+      .status(error instanceof Error ? 500 : 400)
+      .json(
+        createErrorResponse(
+          error instanceof Error ? 500 : 400,
+          error instanceof Error ? (error as Error).message : 'Unable to add the fragment'
+        )
+      );
+  }
+};
+
+export default postFragmentsHandler;
