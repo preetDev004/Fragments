@@ -1,5 +1,3 @@
-import logger from "./logger";
-
 export interface SuccessResponse {
   status: 'ok';
   data?: unknown;
@@ -14,7 +12,6 @@ export interface ErrorResponse {
 }
 
 export const createSuccessResponse = (data?: object): SuccessResponse => {
-  logger.info('createSuccessResponse', data);
   return {
     status: 'ok',
     ...data,
