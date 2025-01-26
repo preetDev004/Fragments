@@ -1,10 +1,9 @@
 // src/auth/basic-auth.ts
 import auth from 'http-auth';
-import passport from 'passport';
 import authPassport from 'http-auth-passport';
 import { Strategy } from 'passport';
-import { RequestHandler } from 'express';
 import logger from '../logger';
+import authorize from './auth-middleware';
 
 // We expect HTPASSWD_FILE to be defined.
 if (!process.env.HTPASSWD_FILE) {
@@ -23,4 +22,4 @@ export const strategy = (): Strategy =>
     })
   );
 
-export const authenticate = (): RequestHandler => passport.authenticate('http', { session: false });
+export const authenticate = () => authorize('http')

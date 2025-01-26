@@ -1,9 +1,8 @@
-import passport from 'passport';
-import { Strategy as BearerStrategy } from 'passport-http-bearer';
 import { CognitoJwtVerifier } from 'aws-jwt-verify';
-import logger from '../logger';
 import { Strategy } from 'passport';
-import { RequestHandler } from 'express';
+import { Strategy as BearerStrategy } from 'passport-http-bearer';
+import logger from '../logger';
+import authorize from './auth-middleware';
 
 // We expect AWS_COGNITO_POOL_ID and AWS_COGNITO_CLIENT_ID to be defined.
 if (!(process.env.AWS_COGNITO_POOL_ID && process.env.AWS_COGNITO_CLIENT_ID)) {
@@ -57,5 +56,4 @@ export const strategy = (): Strategy =>
 /**
  * Middleware to authenticate requests using Passport and the configured Bearer strategy.
  */
-export const authenticate = (): RequestHandler =>
-  passport.authenticate('bearer', { session: false });
+export const authenticate = () => authorize('bearer');
