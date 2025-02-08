@@ -4,14 +4,17 @@
 import * as contentType from 'content-type';
 import express, { Router } from 'express';
 import Fragment from '../../model/fragment';
-import getFragmentsHandler from './get';
+import { getUserFragmentsHandler , getUserFragmentHandler} from './get';
 import postFragmentsHandler from './post';
 
 // Create a router to mount our API endpoints
 const router = Router();
 
 // Define the GET /v1/fragments route
-router.get('/fragments', getFragmentsHandler);
+router.get('/fragments', getUserFragmentsHandler);
+
+// Define the GET /v1/fragments/:id route
+router.get('/fragments/:id', getUserFragmentHandler);
 
 // Define the POST /v1/fragments route
 const rawBody = () =>
