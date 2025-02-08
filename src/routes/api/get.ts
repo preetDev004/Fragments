@@ -6,7 +6,7 @@ import { listFragments, readFragment } from '../../model/data';
  * Get a list of fragments for the current user.
  */
 export const getUserFragmentsHandler = async (req: Request, res: Response): Promise<void> => {
-  await listFragments(req.user! as string, true).then((fragments) => {
+  await listFragments(req.user! as string).then((fragments) => {
     res.status(fragments.length > 0 ? 200 : 204).json(createSuccessResponse({
       fragments: [...fragments],
     }));
