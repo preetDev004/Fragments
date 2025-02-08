@@ -22,7 +22,7 @@ const authorize = (strategyName: StrategyName) => {
      * @param {Error} err - an error object
      * @param {string} email - an authenticated user's email address
      */
-    function callback(err: Error|null, email: string|false) {
+    function callback(err: Error | null, email: string | false) {
       // Something failed, let the the error handling middleware deal with it
       if (err) {
         logger.warn({ err }, 'error authenticating user');

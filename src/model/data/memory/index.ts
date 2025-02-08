@@ -56,4 +56,3 @@ export function deleteFragment(ownerId: string, id: string) {
     data.del(ownerId, id),
   ]);
 }
-
