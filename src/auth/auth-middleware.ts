@@ -4,7 +4,7 @@ import hash from '../hash';
 import logger from '../logger';
 import { createErrorResponse } from '../response';
 
-interface AuthRequest extends Request {
+export interface AuthRequest extends Request {
   user?: string;
 }
 

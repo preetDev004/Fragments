@@ -48,6 +48,12 @@ app.get('/', (req, res) => {
   });
 });
 
+// Define a route to cause a server error - TESTING PURPOSES ONLY
+app.get('/cause-server-error', () => {
+  throw new Error('Intentional server error');
+});
+
+
 // Add 404 middleware to handle any requests for resources that can't be found
 app.use((req, res) => {
   res.status(404).json(createErrorResponse(404, 'not found'));

@@ -21,10 +21,9 @@ const postFragmentsHandler = async (req: Request, res: Response): Promise<void> 
     await fragment.save();
     logger.debug({ fragment }, 'Fragment saved');
 
-    const apiUrl = process.env.API_URL || req.protocol + '://' + new URL(req.headers.host!);
-    logger.info({ fragment, apiUrl }, 'Added URL to header');
+    const apiUrl = process.env.API_URL || `${req.protocol}://${req.headers.host}`;
 
-    res.header('Location', apiUrl + '/v1/fragments');
+    res.header('location', `${apiUrl}/v1/fragments`);
     res.status(201).json(
       createSuccessResponse({
         fragments: [fragment],

@@ -1,4 +1,4 @@
-//!NOTE: This is a workaround to allow for dynamic module loading in a Node.js environment. 
+//!NOTE: This is a workaround to allow for dynamic module loading in a Node.js environment.
 //!      It's not recommended for production.
 
 /* eslint-disable @typescript-eslint/no-require-imports */
