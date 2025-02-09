@@ -1,26 +1,40 @@
 import { Request, Response } from 'express';
-import { createSuccessResponse } from '../../response';
-import { listFragments, readFragment } from '../../model/data';
+import { createErrorResponse, createSuccessResponse } from '../../response';
+import Fragment from '../../model/fragment';
 
 /**
  * Get a list of fragments for the current user.
  */
 export const getUserFragmentsHandler = async (req: Request, res: Response): Promise<void> => {
-  await listFragments(req.user! as string).then((fragments) => {
-    res.status(fragments.length > 0 ? 200 : 204).json(createSuccessResponse({
-      fragments: [...fragments],
-    }));
-  })
+  await Fragment.byUser(req.user! as string).then((fragments) => {
+    res.status(fragments.length > 0 ? 200 : 204).json(
+      createSuccessResponse({
+        fragments: [...fragments],
+      })
+    );
+  });
 };
-
 
 /**
  * Get a fragment for the current user.
  */
 export const getUserFragmentHandler = async (req: Request, res: Response): Promise<void> => {
-  await readFragment(req.user! as string, req.params.id).then((fragment) => {
-    res.status(!fragment ? 404 : 200).json(createSuccessResponse({
-      fragment: fragment,
-    }));
-  })
+  try {
+    await Fragment.byId(req.user! as string, req.params.id).then((fragment) => {
+      res.status(200).json(
+        createSuccessResponse({
+          fragment: fragment,
+        })
+      );
+    });
+  } catch (error: unknown) {
+    res
+      .status(error instanceof Error ? 404 : 500)
+      .json(
+        createErrorResponse(
+          error instanceof Error ? 404 : 500,
+          error instanceof Error ? (error as Error).message : 'Did not find fragment!'
+        )
+      );
+  }
 };
