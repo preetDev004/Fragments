@@ -101,9 +101,9 @@ class Fragment {
    * Saves the current fragment (metadata) to the database
    * @returns Promise<void>
    */
-  save() : Promise<void> {
+  async save() : Promise<void> {
     this.updated = new Date().toISOString();
-    return writeFragment(this);
+    await writeFragment(this);
   }
 
   /**
