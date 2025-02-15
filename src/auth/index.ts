@@ -2,7 +2,7 @@
 //!      It's not recommended for production.
 
 /* eslint-disable @typescript-eslint/no-require-imports */
-import AuthModule from '../../types/authModule';
+import AuthModule from '../types/authModule';
 
 // Make sure our env isn't configured for both AWS Cognito and HTTP Basic Auth
 if (

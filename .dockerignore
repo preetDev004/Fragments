@@ -1,0 +1,14 @@
+.github/
+.vscode/
+coverage/
+# Exclude all test files
+tests/*
+# But keep the .htpasswd
+!tests/.htpasswd
+node_modules/
+.env
+eslint.config.mjs
+.git/
+.gitignore
+.prettier*
+jest*
