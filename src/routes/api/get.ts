@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { createErrorResponse, createSuccessResponse } from '../../response';
+import { createErrorResponse, createSuccessResponse, FragError } from '../../response';
 import Fragment from '../../model/fragment';
 
 /**
@@ -29,11 +29,11 @@ export const getUserFragmentHandler = async (req: Request, res: Response): Promi
     });
   } catch (error: unknown) {
     res
-      .status(error instanceof Error ? 404 : 500)
+      .status(error instanceof FragError ? error.statusCode : 500)
       .json(
         createErrorResponse(
-          error instanceof Error ? 404 : 500,
-          error instanceof Error ? (error as Error).message : 'Did not find fragment!'
+          error instanceof FragError ? error.statusCode : 500,
+          (error as Error).message ? (error as Error).message : 'Did not find fragment!'
         )
       );
   }

@@ -10,6 +10,13 @@ export interface ErrorResponse {
     message: string;
   };
 }
+export class FragError extends Error {
+  statusCode: number;
+  constructor(message:string, statusCode:number) {
+    super(message);
+    this.statusCode = statusCode;
+  }
+}
 
 export const createSuccessResponse = (data?: object): SuccessResponse => {
   return {

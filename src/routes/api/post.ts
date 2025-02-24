@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import Fragment from '../../model/fragment';
-import { createErrorResponse, createSuccessResponse } from '../../response';
+import { createErrorResponse, createSuccessResponse, FragError } from '../../response';
 import logger from '../../logger';
 
 const postFragmentsHandler = async (req: Request, res: Response): Promise<void> => {
@@ -11,6 +11,7 @@ const postFragmentsHandler = async (req: Request, res: Response): Promise<void> 
       res.status(415).json(createErrorResponse(415, 'Unsupported content type'));
       return;
     }
+    logger.debug({ body }, 'Received fragment');
     const fragment = new Fragment({
       ownerId: req.user! as string,
       type: req.headers['content-type']! as string,
@@ -32,11 +33,11 @@ const postFragmentsHandler = async (req: Request, res: Response): Promise<void> 
   } catch (error: unknown) {
     logger.error({ error }, 'Unable to add the fragment');
     res
-      .status(error instanceof Error ? 500 : 400)
+      .status(error instanceof FragError ? error.statusCode : 500)
       .json(
         createErrorResponse(
-          error instanceof Error ? 500 : 400,
-          error instanceof Error ? (error as Error).message : 'Unable to add the fragment'
+          error instanceof FragError ? error.statusCode : 500,
+          (error as Error).message ? (error as Error).message : 'Unable to add the fragment'
         )
       );
   }
