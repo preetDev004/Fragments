@@ -1,3 +1,4 @@
+import { FragError } from './../response';
 // Use crypto.randomUUID() to create unique IDs, see:
 // https://nodejs.org/api/crypto.html#cryptorandomuuidoptions
 import { randomUUID } from 'crypto';
@@ -5,6 +6,7 @@ import { randomUUID } from 'crypto';
 import * as contentType from 'content-type';
 
 // Functions for working with fragment metadata/data using our DB
+import { validateFragmentContent } from '../utils/formatValidator';
 import {
   deleteFragment,
   listFragments,
@@ -16,12 +18,13 @@ import {
 
 export const validTypes = [
   `text/plain`,
+  `text/markdown`,
+  `text/html`,
+  `text/csv`,
+  `application/json`,
   /*
    Currently, only text/plain is supported. Others will be added later.
 
-  `text/markdown`,
-  `text/html`,
-  `application/json`,
   `image/png`,
   `image/jpeg`,
   `image/webp`,
@@ -47,11 +50,11 @@ class Fragment {
   size: number;
 
   constructor({ id, ownerId, created, updated, type, size = 0 }: FragmentData) {
-    if (size < 0){
-      throw new Error('size cannot be negative');
+    if (size < 0) {
+      throw new FragError('size cannot be negative', 400);
     }
     if (!Fragment.isSupportedType(type)) {
-      throw new Error(`Unsupported type: ${type}`);
+      throw new FragError(`Unsupported type: ${type}`, 415);
     }
     this.id = id || randomUUID();
     this.ownerId = ownerId;
@@ -68,7 +71,7 @@ class Fragment {
    * @returns Promise<Array<Fragment>>
    */
   static async byUser(ownerId: string, expand = false): Promise<string[] | Fragment[]> {
-    const fragments = await listFragments(ownerId, expand); 
+    const fragments = await listFragments(ownerId, expand);
     return fragments;
   }
 
@@ -81,7 +84,7 @@ class Fragment {
   static async byId(ownerId: string, id: string): Promise<Fragment> {
     const fragment = await readFragment(ownerId, id);
     if (!fragment) {
-      throw new Error(`Fragment not found: ${id}`);
+      throw new FragError(`Fragment not found: ${id}`,404);
     }
     // TIP: make sure you properly re-create a full Fragment instance after getting from db.
     return new Fragment(fragment);
@@ -93,7 +96,7 @@ class Fragment {
    * @param {string} id fragment's id
    * @returns Promise<void>
    */
-  static delete(ownerId: string, id:string) : Promise<[void, void]> {
+  static delete(ownerId: string, id: string): Promise<[void, void]> {
     return deleteFragment(ownerId, id);
   }
 
@@ -101,7 +104,7 @@ class Fragment {
    * Saves the current fragment (metadata) to the database
    * @returns Promise<void>
    */
-  async save() : Promise<void> {
+  async save(): Promise<void> {
     this.updated = new Date().toISOString();
     await writeFragment(this);
   }
@@ -110,7 +113,7 @@ class Fragment {
    * Gets the fragment's data from the database
    * @returns Promise<Buffer>
    */
-  getData() : Promise<Buffer> {
+  getData(): Promise<Buffer> {
     return readFragmentData(this.ownerId, this.id) as Promise<Buffer>;
   }
 
@@ -119,9 +122,13 @@ class Fragment {
    * @param {Buffer} data
    * @returns Promise<void>
    */
-  async setData(data : Buffer) : Promise<void> {
+  async setData(data: Buffer): Promise<void> {
     if (!Buffer.isBuffer(data)) {
-      throw new Error('data must be a Buffer');
+      throw new FragError('data must be a Buffer', 400);
+    }
+    const isFailed = validateFragmentContent(this.mimeType, data.toString());
+    if (isFailed) {
+      throw new FragError(isFailed, 400);
     }
     this.size = data.length;
     this.updated = new Date().toISOString();
@@ -144,16 +151,16 @@ class Fragment {
    * Returns true if this fragment is a text/* mime type
    * @returns {boolean} true if fragment's type is text/*
    */
-  get isText() : boolean {
-    return this.mimeType.startsWith('text/')
+  get isText(): boolean {
+    return this.mimeType.startsWith('text/');
   }
 
   /**
    * Returns the formats into which this fragment type can be converted
    * @returns {Array<string>} list of supported mime types
    */
-  get formats() : Array<string> {
-    return [this.mimeType]
+  get formats(): Array<string> {
+    return [this.mimeType];
   }
 
   /**

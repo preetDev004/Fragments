@@ -10,25 +10,13 @@ describe('POST /v1/fragments', () => {
   test('incorrect credentials are denied', () =>
     request(app).post('/v1/fragments').auth('invalid@email.com', 'incorrect_password').expect(401));
 
-  // Using a valid username/password pair and invalid content should give a failure
-  test('authenticated users, with invalid content', async () => {
-    const res = await request(app)
-      .post('/v1/fragments')
-      .set('Content-Type', 'application/json')
-      .send({ key: 'value', anotherKey: 'anotherValue' })
-      .auth('user1@email.com', 'password1');
-
-    expect(res.statusCode).toBe(415);
-    expect(res.body.status).toBe('error');
-  });
-
   test('authenticated users, with no content', async () => {
     const res = await request(app)
       .post('/v1/fragments')
       .set('Content-Type', 'application/json')
       .auth('user1@email.com', 'password1');
 
-    expect(res.statusCode).toBe(415);
+    expect(res.statusCode).toBe(400);
     expect(res.body.status).toBe('error');
   });
 
@@ -154,7 +142,7 @@ describe('POST /v1/fragments', () => {
       .send('test content')
       .auth('user1@email.com', 'password1');
 
-    expect(res.statusCode).toBe(400);
+    expect(res.statusCode).toBe(500);
     expect(res.body.error.message).toBe('Unable to add the fragment');
   });
 
