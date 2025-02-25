@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import Fragment from '../../model/fragment';
 import { createErrorResponse, createSuccessResponse, FragError } from '../../response';
 import logger from '../../logger';
+import { validateFragmentContent } from '../../utils/formatValidator';
 
 const postFragmentsHandler = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -11,6 +12,11 @@ const postFragmentsHandler = async (req: Request, res: Response): Promise<void> 
       res.status(415).json(createErrorResponse(415, 'Unsupported content type'));
       return;
     }
+    const inValid = validateFragmentContent(req.headers['content-type']! as string, body.toString())
+    if(!inValid){
+      throw new FragError("Invalid Content, Failed to parse!", 400)
+    }
+
     logger.debug({ body }, 'Received fragment');
     const fragment = new Fragment({
       ownerId: req.user! as string,
@@ -37,7 +43,7 @@ const postFragmentsHandler = async (req: Request, res: Response): Promise<void> 
       .json(
         createErrorResponse(
           error instanceof FragError ? error.statusCode : 500,
-          (error as Error).message ? (error as Error).message : 'Unable to add the fragment'
+          error instanceof FragError ? error.message : (error as Error).message ? (error as Error).message : 'Unable to add the fragment'
         )
       );
   }

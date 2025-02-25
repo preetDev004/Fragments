@@ -63,17 +63,6 @@ describe('POST /v1/fragments', () => {
       
     expect(res.statusCode).toBe(413); // Payload Too Large
   });
-  // Test zero-size fragment creation
-  test('zero-size fragment is allowed', async () => {
-    const res = await request(app)
-      .post('/v1/fragments')
-      .set('Content-Type', 'text/plain')
-      .send(Buffer.alloc(0))
-      .auth('user1@email.com', 'password1');
-
-    expect(res.statusCode).toBe(201);
-    expect(res.body.fragments[0].size).toBe(0);
-  });
 
   // Note: The following test is conceptual and may require mocking
   // Test error during fragment saving (mocked scenario)

@@ -6,7 +6,6 @@ import { randomUUID } from 'crypto';
 import * as contentType from 'content-type';
 
 // Functions for working with fragment metadata/data using our DB
-import { validateFragmentContent } from '../utils/formatValidator';
 import {
   deleteFragment,
   listFragments,
@@ -125,10 +124,6 @@ class Fragment {
   async setData(data: Buffer): Promise<void> {
     if (!Buffer.isBuffer(data)) {
       throw new FragError('data must be a Buffer', 400);
-    }
-    const isFailed = validateFragmentContent(this.mimeType, data.toString());
-    if (isFailed) {
-      throw new FragError(isFailed, 400);
     }
     this.size = data.length;
     this.updated = new Date().toISOString();

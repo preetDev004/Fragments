@@ -4,7 +4,7 @@
 import * as contentType from 'content-type';
 import express, { Router } from 'express';
 import Fragment from '../../model/fragment';
-import { getUserFragmentsHandler , getUserFragmentHandler} from './get';
+import { getUserFragmentHandler, getUserFragmentsHandler } from './get';
 import postFragmentsHandler from './post';
 
 // Create a router to mount our API endpoints
