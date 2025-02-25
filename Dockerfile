@@ -37,7 +37,12 @@ RUN npm run build
 # Stage 2 - Serve the build app (production)
 FROM node:22.5.1-alpine3.20@sha256:9fcc1a6da2b9eee38638df75c5f826e06e9c79f6a0f97f16ed98fe0ebb0725c0 AS deploy
 
-LABEL maintainer="Preet Patel <pdpatel51@myseneca.ca>" \
+ARG COMMIT_SHA="development"
+ARG BUILD_DATE="unknown"
+
+LABEL version="${COMMIT_SHA}" \
+      build-date="${BUILD_DATE}" \
+      maintainer="Preet Patel <pdpatel51@myseneca.ca>" \
       description="Fragments node.js microservice"
 
 # # We default to use port 8080 in our service
