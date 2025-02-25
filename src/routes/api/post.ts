@@ -13,7 +13,7 @@ const postFragmentsHandler = async (req: Request, res: Response): Promise<void> 
       return;
     }
     const inValid = validateFragmentContent(req.headers['content-type']! as string, body.toString())
-    if(!inValid){
+    if(inValid){
       throw new FragError("Invalid Content, Failed to parse!", 400)
     }
 
