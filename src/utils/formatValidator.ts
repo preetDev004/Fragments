@@ -1,9 +1,10 @@
 import { validTypes } from '../model/fragment';
+import Papa from 'papaparse';
 
-export const validateFragmentContent = (
+export const validateFragmentContent = async (
   type: (typeof validTypes)[number],
   content: string
-): string => {
+): Promise<string> => {
   if (!content.trim()) return "Content cannot be empty";
 
   switch (type) {
@@ -27,6 +28,12 @@ export const validateFragmentContent = (
     case 'text/markdown':
       if (!isMarkdown(content.toString())) {
         return 'Invalid Markdown format';
+      }
+      break;
+
+    case 'text/csv':
+      if (!((await isCSV(content)).isValid)) {
+        return 'Invalid CSV format';
       }
       break;
 
@@ -182,4 +189,42 @@ const isMarkdown = (text: string) => {
 
   // Return true if any Markdown feature is present
   return featureCount > 0;
+};
+// Validate a string containing potential CSV content
+const isCSV = (text: string): Promise<{isValid: boolean}> => {
+  // No need to check file type or extension since we're working with a string directly
+  
+  return new Promise((resolve) => {
+    // Try parsing with PapaParse directly from the string
+    Papa.parse(text, {
+      // Try to auto-detect the delimiter (comma or semicolon)
+      delimiter: text.includes(';') ? ';' : ',',
+      header: true, // Parse the first row as headers
+      skipEmptyLines: true,
+      
+      // Complete callback - called when parsing is finished
+      complete: (results) => {
+        console.log('Parsed CSV content:', results.data);
+        
+        // Check if PapaParse encountered errors or if data looks valid
+        if (results.errors.length > 0) {
+          console.error('CSV parsing errors:', results.errors);
+          // File couldn't be parsed properly
+          resolve({isValid: false});
+        } else if (results.data.length === 0) {
+          // No data rows found
+          resolve({isValid: false});
+        } else {
+          // Successfully parsed as CSV
+          resolve({isValid: true});
+        }
+      },
+      
+      // Error callback - if parsing fails catastrophically
+      error: (error: Error) => {
+        console.error('Fatal parsing error:', error.message);
+        resolve({isValid: false});
+      }
+    });
+  });
 };
