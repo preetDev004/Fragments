@@ -7,7 +7,8 @@ import Fragment from '../../model/fragment';
 import { getUserFragmentsHandler } from './get';
 import { getUserFragmentByIdHandler } from './getById';
 import postFragmentsHandler from './post';
-import { getUserFragmentByIdInfoHandler } from './getByIdInfo';
+import { getUserFragmentInfoHandler } from './getByIdInfo';
+import { getConvertedUserFragmentHandler } from './getConverted';
 
 // Create a router to mount our API endpoints
 const router = Router();
@@ -15,11 +16,14 @@ const router = Router();
 // Define the GET /v1/fragments route
 router.get('/fragments', getUserFragmentsHandler);
 
+// Define the GET /v1/fragments/:id.:ext route
+router.get('/fragments/:id.:ext', getConvertedUserFragmentHandler);
+
 // Define the GET /v1/fragments/:id route
 router.get('/fragments/:id', getUserFragmentByIdHandler);
 
 // Define the GET /v1/fragments/:id/info route
-router.get('/fragments/:id/info', getUserFragmentByIdInfoHandler);
+router.get('/fragments/:id/info', getUserFragmentInfoHandler);
 
 // Define the POST /v1/fragments route
 const rawBody = () =>

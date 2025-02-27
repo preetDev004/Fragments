@@ -4,10 +4,7 @@ import { createErrorResponse, createSuccessResponse, FragError } from '../../res
 /**
  * Get a fragment metadata for the current user.
  */
-export const getUserFragmentByIdInfoHandler = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
+export const getUserFragmentInfoHandler = async (req: Request, res: Response): Promise<void> => {
   try {
     await Fragment.byId(req.user! as string, req.params.id).then(async (fragment) => {
       res.status(200).json(
