@@ -83,7 +83,7 @@ class Fragment {
   static async byId(ownerId: string, id: string): Promise<Fragment> {
     const fragment = await readFragment(ownerId, id);
     if (!fragment) {
-      throw new FragError(`Fragment not found: ${id}`,404);
+      throw new FragError(`Fragment not found: ${id}`, 404);
     }
     // TIP: make sure you properly re-create a full Fragment instance after getting from db.
     return new Fragment(fragment);

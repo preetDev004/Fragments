@@ -9,6 +9,6 @@ declare module 'http-auth-passport' {
    * @returns Passport Strategy instance
    */
   function HttpAuthPassport(auth: Basic): Strategy;
-  
+
   export = HttpAuthPassport;
 }

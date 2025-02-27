@@ -12,11 +12,14 @@ const postFragmentsHandler = async (req: Request, res: Response): Promise<void> 
       res.status(415).json(createErrorResponse(415, 'Unsupported content type'));
       return;
     }
-    const content = body.toString()
+    const content = body.toString();
     logger.debug({ content }, 'Received fragment');
-    const inValid = await validateFragmentContent(req.headers['content-type']! as string, body.toString())
-    if(inValid){
-      throw new FragError(inValid, 400)
+    const inValid = await validateFragmentContent(
+      req.headers['content-type']! as string,
+      body.toString()
+    );
+    if (inValid) {
+      throw new FragError(inValid, 400);
     }
 
     logger.debug({ body }, 'Received fragment');
@@ -45,7 +48,11 @@ const postFragmentsHandler = async (req: Request, res: Response): Promise<void> 
       .json(
         createErrorResponse(
           error instanceof FragError ? error.statusCode : 500,
-          error instanceof FragError ? error.message : (error as Error).message ? (error as Error).message : 'Unable to add the fragment'
+          error instanceof FragError
+            ? error.message
+            : (error as Error).message
+              ? (error as Error).message
+              : 'Unable to add the fragment'
         )
       );
   }

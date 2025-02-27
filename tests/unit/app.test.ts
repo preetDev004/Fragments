@@ -37,8 +37,4 @@ describe('/404 route tests', () => {
     await request(app).get('/cause-server-error');
     // Check for logs to verify logger.error was called for server errors
   });
-
 });
-
-
-

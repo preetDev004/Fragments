@@ -60,7 +60,7 @@ describe('POST /v1/fragments', () => {
       .set('Content-Type', 'text/plain')
       .send(largeContent)
       .auth('user1@email.com', 'password1');
-      
+
     expect(res.statusCode).toBe(413); // Payload Too Large
   });
 
@@ -93,7 +93,7 @@ describe('POST /v1/fragments', () => {
       .set('Content-Type', 'text/plain')
       .send('test content')
       .auth('user1@email.com', 'password1');
-      
+
     // supertest uses http://127.0.0.1:${port} by default
     expect(res.headers['location']).toMatch(/^http:\/\/127\.0\.0\.1:\d+\/v1\/fragments$/);
 

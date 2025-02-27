@@ -1,5 +1,5 @@
-import { RequestHandler } from "express";
-import { Strategy } from "passport-http-bearer";
+import { RequestHandler } from 'express';
+import { Strategy } from 'passport-http-bearer';
 
 interface AuthModule {
   strategy: () => Strategy;

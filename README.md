@@ -12,32 +12,40 @@ A RESTful API for the Fragments service, allowing users to create, read, update,
 ### Installation
 
 1. Clone the repository:
+
 ```bash
 git clone https://github.com/preetDev004/Fragments.git ./
 ```
+
 2. Install dependencies:
+
 ```bash
 npm install
-``` 
+```
 
 ## Available Scripts
 
 ### Development
 
 - **Start in Development Mode**
+
   ```bash:README.md
   npm run dev
   ```
+
   Runs the server in development mode with:
+
   - Auto-reload on file changes
   - Debug level logging
   - Pretty-printed logs
   - Watches `src` directory for changes
 
 - **Start in Production Mode**
+
   ```bash
   npm start
   ```
+
   Runs the server in production mode without auto-reload or debug logging.
 
 - **Debug Mode**
@@ -53,9 +61,11 @@ npm install
 ### Code Quality
 
 - **Lint**
+
   ```bash
   npm run lint
   ```
+
   Runs ESLint to check TypeScript files in the `src` directory for code style and potential errors.
 
 - **Build**
@@ -74,12 +84,14 @@ npm install
 ### VS Code Integration
 
 This project includes VS Code settings for:
+
 - Auto-formatting on save using Prettier
 - 2-space indentation
 - ESLint integration
 - Debug configuration
 
 To use the debugger in VS Code:
+
 1. Open the Debug view (`Ctrl+Shift+D` or `Cmd+Shift+D`)
 2. Select "Debug via npm run debug" from the dropdown
 3. Press F5 to start debugging
@@ -87,6 +99,7 @@ To use the debugger in VS Code:
 ## API Endpoints
 
 ### Health Check
+
 - `GET /` - Returns basic server information and status
 
 ## License

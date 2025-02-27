@@ -11,7 +11,8 @@
     "lint": "eslint \"./src/**/*.ts\" \"tests/**/*.ts\"",
     "start": "npx ts-node src/index.ts",
     "dev": "LOG_LEVEL=debug nodemon ./src/index.ts --watch src",
-    "debug": "LOG_LEVEL=debug nodemon --inspect=0.0.0.0:9229 --exec node -r ts-node/register ./src/index.ts --watch src"
+    "debug": "LOG_LEVEL=debug nodemon --inspect=0.0.0.0:9229 --exec node -r ts-node/register ./src/index.ts --watch src",
+    "format": "prettier --write \"**/*.{js,ts,jsx,tsx,html,css,json,md}\""
   },
   "repository": {
     "type": "git",

@@ -5,9 +5,9 @@ import {
   readFragmentData,
   writeFragment,
   writeFragmentData,
-} from "../../src/model/data/memory"; // Update with the correct path to your module
+} from '../../src/model/data/memory'; // Update with the correct path to your module
 
-import Fragment from "../../src/model/fragment";
+import Fragment from '../../src/model/fragment';
 
 // Wait for a certain number of ms (default 50). Feel free to change this value
 // if it isn't long enough for your test runs. Returns a Promise.
@@ -18,8 +18,8 @@ describe('DB operations', () => {
   const testFragment: Fragment = new Fragment({
     ownerId: testOwnerId,
     type: 'text/plain',
-    size: 0
-  })
+    size: 0,
+  });
 
   describe('writeFragment()', () => {
     it('should write fragment metadata successfully', async () => {
@@ -30,11 +30,11 @@ describe('DB operations', () => {
   describe('readFragment()', () => {
     it('should read existing fragment metadata', async () => {
       const retrievedFragment = await readFragment(testOwnerId, testFragment.id);
-      
+
       expect(retrievedFragment).toMatchObject({
         id: testFragment.id,
         ownerId: testOwnerId,
-        type: 'text/plain'
+        type: 'text/plain',
       });
     });
     it('should not read fragment metadata for non-existent owner', async () => {
@@ -56,7 +56,7 @@ describe('DB operations', () => {
     it('should read written fragment data', async () => {
       const testData = Buffer.from('test data');
       await writeFragmentData(testOwnerId, testFragment.id, testData);
-      
+
       const retrievedData = await readFragmentData(testOwnerId, testFragment.id);
       expect(retrievedData).toEqual(testData);
     });
@@ -76,7 +76,7 @@ describe('DB operations', () => {
       const fragments = await listFragments(testOwnerId, true);
       expect(fragments[0]).toMatchObject({
         id: testFragment.id,
-        ownerId: testOwnerId
+        ownerId: testOwnerId,
       });
     });
 
@@ -89,7 +89,7 @@ describe('DB operations', () => {
   describe('deleteFragment()', () => {
     it('should delete a fragment successfully', async () => {
       await expect(deleteFragment(testOwnerId, testFragment.id)).resolves.not.toThrow();
-      
+
       const retrievedFragment = await readFragment(testOwnerId, testFragment.id);
       expect(retrievedFragment).toBeUndefined();
     });
@@ -99,10 +99,10 @@ describe('DB operations', () => {
       await writeFragment(testFragment);
       await writeFragmentData(testOwnerId, testFragment.id, testData);
       await deleteFragment(testOwnerId, testFragment.id);
-      
+
       const retrievedFragment = await readFragment(testOwnerId, testFragment.id);
       const retrievedData = await readFragmentData(testOwnerId, testFragment.id);
-      
+
       expect(retrievedFragment).toBeUndefined();
       expect(retrievedData).toBeUndefined();
     });

@@ -79,9 +79,9 @@ describe('Basic Auth Implementation', () => {
   describe('strategy()', () => {
     test('creates basic auth strategy with correct configuration', () => {
       const { strategy } = require('../../src/auth/basic-auth');
-      
+
       const result = strategy();
-      
+
       expect(mockBasicAuth).toHaveBeenCalledWith({
         file: './test.htpasswd',
       });
@@ -98,7 +98,7 @@ describe('Basic Auth Implementation', () => {
 
       const { authenticate } = require('../../src/auth/basic-auth');
       const result = authenticate();
-      
+
       expect(mockAuthorize).toHaveBeenCalledWith('http');
       expect(result).toBe('auth-middleware');
     });

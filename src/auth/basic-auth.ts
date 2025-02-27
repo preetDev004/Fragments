@@ -22,4 +22,4 @@ export const strategy = (): Strategy =>
     })
   );
 
-export const authenticate = () => authorize('http')
+export const authenticate = () => authorize('http');

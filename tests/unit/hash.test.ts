@@ -1,4 +1,4 @@
-import hash from "../../src/hash";
+import hash from '../../src/hash';
 
 describe('hash()', () => {
   const email = 'user1@example.com';

@@ -25,7 +25,7 @@ app.use(helmet());
 app.use(cors());
 
 // Use gzip/deflate compression middleware
-app.use(compression({threshold : 0}));
+app.use(compression({ threshold: 0 }));
 
 passport.use(authModule.strategy());
 app.use(passport.initialize());
@@ -52,7 +52,6 @@ app.get('/', (req, res) => {
 app.get('/cause-server-error', () => {
   throw new Error('Intentional server error');
 });
-
 
 // Add 404 middleware to handle any requests for resources that can't be found
 app.use((req, res) => {
