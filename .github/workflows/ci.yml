@@ -58,6 +58,18 @@ jobs:
         # run: npm install-ci-test
         run: npm install-ci-test
 
+  dockerfile-lint:
+    name: 'Dockerfile Lint'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out Code
+        uses: actions/checkout@v4
+      - name: hadoling test
+        uses: hadolint/hadolint@v3.1.0
+        with:
+          dockerfile: Dockerfile
+
   docker-build-push:
     name: 'Docker image build and Push to DockerHub'
     # This ensures the job only runs on pushes to main, not on pull requests

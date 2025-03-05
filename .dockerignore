@@ -12,3 +12,6 @@ eslint.config.mjs
 .gitignore
 .prettier*
 jest*
+build/
+dist/
+coverage/
