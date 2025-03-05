@@ -29,7 +29,7 @@ npm install
 
 - **Start in Development Mode**
 
-  ```bash:README.md
+  ```bash
   npm run dev
   ```
 
@@ -80,6 +80,11 @@ npm install
 
 - `PORT` - Server port (default: 8080)
 - `LOG_LEVEL` - Logging level (default: 'info', can be set to 'debug' for detailed logs)
+- `API_URL` - Base URL for the API
+- `HTPASSWD_FILE` - Path to the `.htpasswd` file for HTTP Basic Auth
+- `AWS_COGNITO_POOL_ID` - AWS Cognito User Pool ID
+- `AWS_COGNITO_CLIENT_ID` - AWS Cognito Client App ID
+- `NODE_ENV` - Node environment (e.g., 'development', 'production')
 
 ### VS Code Integration
 
@@ -102,13 +107,17 @@ To use the debugger in VS Code:
 
 - `GET /` - Returns basic server information and status
 
-## License
+### Fragments
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+- `GET /v1/fragments` - Get a list of fragments for the current user
+- `GET /v1/fragments/:id` - Get a fragment by ID for the current user
+- `GET /v1/fragments/:id/info` - Get fragment metadata by ID for the current user
+- `GET /v1/fragments/:id.:ext` - Get a converted fragment by ID for the current user
+- `POST /v1/fragments` - Create a new fragment
 
 ## Author
 
-Preet
+Preet Patel
 
 ## Repository
 
