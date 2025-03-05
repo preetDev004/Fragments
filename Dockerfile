@@ -55,7 +55,7 @@ ENV PORT=8080 \
     NPM_CONFIG_COLOR=false
 
 # Install curl for health checks and Install Tini for proper signal handling of child processes
-RUN apk add --no-cache curl=8.7.1 tini=0.19.0
+RUN apk add --no-cache curl=8.12.1-r0 tini=0.19.0-r3
 
 WORKDIR /app
 

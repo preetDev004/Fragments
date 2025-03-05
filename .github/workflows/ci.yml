@@ -66,7 +66,7 @@ jobs:
       - name: Check out Code
         uses: actions/checkout@v4
       - name: hadoling test
-        uses: hadolint/hadolint@v3.1.0
+        uses: hadolint/hadolint-action@v3.1.0
         with:
           dockerfile: Dockerfile
 
@@ -75,7 +75,7 @@ jobs:
     # This ensures the job only runs on pushes to main, not on pull requests
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     # Make this job run after the other jobs have succeeded
-    needs: [lint, unit-tests]
+    needs: [lint, unit-tests, dockerfile-lint]
 
     runs-on: ubuntu-latest
 
