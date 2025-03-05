@@ -83,7 +83,7 @@ jobs:
       - name: Check out Code
         uses: actions/checkout@v4
 
-      - name: Setup Deocker Buildx
+      - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v3
 
       - name: Login to DockerHub
