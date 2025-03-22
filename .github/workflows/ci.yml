@@ -33,8 +33,6 @@ jobs:
       - name: Install node dependencies
         # Use `ci` vs. `install`, see https://docs.npmjs.com/cli/v8/commands/npm-ci
         run: npm ci
-      - name: Build TypeScript
-        run: npm run build
       - name: Run ESLint
         run: npm run lint
 
@@ -57,6 +55,32 @@ jobs:
         # 2. Use `install-ci-test` to do it in a single command, see https://docs.npmjs.com/cli/v8/commands/npm-install-ci-test
         # run: npm install-ci-test
         run: npm install-ci-test
+  
+  integration-tests:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          cache: 'npm'
+      - name: Install node dependencies
+        # NOTE: we need to install dev dependencies too vs. production only for hurl
+        run: npm ci
+        # Set up (MOCK) local AWS resources for integration tests
+      - name: Make local-aws-setup.sh executable
+        # Add execute permissions to local-aws-setup.sh
+        run: chmod +x ./scripts/local-aws-setup.sh
+      # Build and start the local AWS resources
+      - name: Build Containers
+        run: docker compose up -d
+      - name: Setup Local AWS Resources
+        run: ./scripts/local-aws-setup.sh
+      - name: Run Hurl Tests
+        run: npm run test:integration
 
   dockerfile-lint:
     name: 'Dockerfile Lint'
@@ -75,7 +99,7 @@ jobs:
     # This ensures the job only runs on pushes to main, not on pull requests
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     # Make this job run after the other jobs have succeeded
-    needs: [lint, unit-tests, dockerfile-lint]
+    needs: [lint, unit-tests, dockerfile-lint, integration-tests]
 
     runs-on: ubuntu-latest
 
