@@ -72,7 +72,9 @@ describe('GET /v1/fragments/:id.:ext', () => {
       .auth(userEmail, userPassword);
 
     expect(getRes.statusCode).toBe(400);
-    expect(getRes.body.error.message).toMatch(/Conversion not possible for text\/plain fragment to html/);
+    expect(getRes.body.error.message).toMatch(
+      /Conversion not possible for text\/plain fragment to html/
+    );
   });
 
   // Test that users can't access other users' fragments

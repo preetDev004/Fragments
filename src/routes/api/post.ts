@@ -35,10 +35,10 @@ const postFragmentsHandler = async (req: Request, res: Response): Promise<void> 
 
     const apiUrl = process.env.API_URL || `${req.protocol}://${req.headers.host}`;
 
-    res.header('location', `${apiUrl}/v1/fragments`);
+    res.header('location', `${apiUrl}/v1/fragments/${fragment.id}`);
     res.status(201).json(
       createSuccessResponse({
-        fragments: [fragment],
+        fragment: fragment,
       })
     );
   } catch (error: unknown) {
