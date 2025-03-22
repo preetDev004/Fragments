@@ -22,7 +22,7 @@ describe('GET /v1/fragments/:id/info', () => {
       .send('test fragment content')
       .auth('user1@email.com', 'password1');
 
-    const fragmentId = postResponse.body.fragments[0].id;
+    const fragmentId = postResponse.body.fragment.id;
 
     // Get the fragment info
     const res = await request(app)
@@ -57,7 +57,7 @@ describe('GET /v1/fragments/:id/info', () => {
       .send('test fragment content')
       .auth('user1@email.com', 'password1');
 
-    const fragmentId = postResponse.body.fragments[0].id;
+    const fragmentId = postResponse.body.fragment.id;
 
     // Try to access with user2
     const res = await request(app)

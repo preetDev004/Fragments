@@ -36,7 +36,7 @@ describe('GET /v1/fragments/:id', () => {
       .auth(userEmail, userPassword);
 
     expect(postRes.statusCode).toBe(201);
-    const fragmentId = postRes.body.fragments[0].id;
+    const fragmentId = postRes.body.fragment.id;
 
     // Retrieve the fragment using the same user
     const getRes = await request(app)
@@ -60,7 +60,7 @@ describe('GET /v1/fragments/:id', () => {
       .send(content)
       .auth('user1@email.com', 'password1');
 
-    const fragmentId = postRes.body.fragments[0].id;
+    const fragmentId = postRes.body.fragment.id;
 
     // Try to access the fragment as user2
     const getRes = await request(app)

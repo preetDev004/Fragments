@@ -9,6 +9,7 @@ import { getUserFragmentByIdHandler } from './getById';
 import postFragmentsHandler from './post';
 import { getUserFragmentInfoHandler } from './getByIdInfo';
 import { getConvertedUserFragmentHandler } from './getConverted';
+import logger from '../../logger';
 
 // Create a router to mount our API endpoints
 const router = Router();
@@ -35,6 +36,7 @@ const rawBody = () =>
       // a Buffer (e.g., `Buffer.isBuffer(req.body) === true`). If not, `req.body`
       // will be equal to an empty Object `{}` and `Buffer.isBuffer(req.body) === false`
       const { type } = contentType.parse(req);
+      logger.debug({ type }, 'Received fragment TYPE');
       return Fragment.isSupportedType(type);
     },
   });

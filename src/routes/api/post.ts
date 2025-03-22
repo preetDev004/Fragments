@@ -3,6 +3,8 @@ import Fragment from '../../model/fragment';
 import { createErrorResponse, createSuccessResponse, FragError } from '../../response';
 import logger from '../../logger';
 import { validateFragmentContent } from '../../utils/formatValidator';
+import * as contentType from 'content-type';
+
 
 const postFragmentsHandler = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -15,7 +17,7 @@ const postFragmentsHandler = async (req: Request, res: Response): Promise<void> 
     const content = body.toString();
     logger.debug({ content }, 'Received fragment');
     const inValid = await validateFragmentContent(
-      req.headers['content-type']! as string,
+      contentType.parse(req).type as string,
       body.toString()
     );
     if (inValid) {

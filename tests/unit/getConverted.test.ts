@@ -39,7 +39,7 @@ describe('GET /v1/fragments/:id.:ext', () => {
       .auth(userEmail, userPassword);
 
     expect(postRes.statusCode).toBe(201);
-    const fragmentId = postRes.body.fragments[0].id;
+    const fragmentId = postRes.body.fragment.id;
 
     // Request the fragment as HTML
     const getRes = await request(app)
@@ -64,7 +64,7 @@ describe('GET /v1/fragments/:id.:ext', () => {
       .auth(userEmail, userPassword);
 
     expect(postRes.statusCode).toBe(201);
-    const fragmentId = postRes.body.fragments[0].id;
+    const fragmentId = postRes.body.fragment.id;
 
     // Try to request it as HTML
     const getRes = await request(app)
@@ -87,7 +87,7 @@ describe('GET /v1/fragments/:id.:ext', () => {
       .send(markdownContent)
       .auth('user1@email.com', 'password1');
 
-    const fragmentId = postRes.body.fragments[0].id;
+    const fragmentId = postRes.body.fragment.id;
 
     // Try to access the converted fragment as user2
     const getRes = await request(app)
@@ -110,7 +110,7 @@ describe('GET /v1/fragments/:id.:ext', () => {
       .send(markdownContent)
       .auth(userEmail, userPassword);
 
-    const fragmentId = postRes.body.fragments[0].id;
+    const fragmentId = postRes.body.fragment.id;
 
     // Mock MarkdownIt's render method to throw an error
     jest.spyOn(MarkdownIt.prototype, 'render').mockImplementationOnce(() => {
