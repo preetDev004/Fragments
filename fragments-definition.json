@@ -27,7 +27,12 @@
         {
           "name": "LOG_LEVEL",
           "value": "debug"
+        },
+        {
+          "name" : "AWS_S3_BUCKET_NAME",
+          "value" : "pdpatel51-fragments"
         }
+        
       ],
       "environmentFiles": [],
       "mountPoints": [],
