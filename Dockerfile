@@ -69,7 +69,7 @@ COPY --from=build --chown=node:node /app/build ./build
 COPY --from=build --chown=node:node /app/tests/.htpasswd ./tests/.htpasswd
 
 # Drop privileges to non-root user
-USER node:node 
+# USER node:node 
 
 # Check container health every 30s, allow 15s timeout, 8s initial delay
 HEALTHCHECK --interval=30s --timeout=15s --start-period=8s --retries=3 \
