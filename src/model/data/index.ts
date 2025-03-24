@@ -1,17 +1,15 @@
-import {
-  readFragment,
-  readFragmentData,
-  writeFragment,
-  writeFragmentData,
-  listFragments,
-  deleteFragment,
-} from './memory';
+const getModule = () =>
+  process.env.AWS_REGION
+    ? // eslint-disable-next-line @typescript-eslint/no-require-imports
+      require('./aws')
+    : // eslint-disable-next-line @typescript-eslint/no-require-imports
+      require('./memory');
 
-export {
+export const {
+  deleteFragment,
+  listFragments,
   readFragment,
   readFragmentData,
   writeFragment,
   writeFragmentData,
-  listFragments,
-  deleteFragment,
-};
+} = getModule();

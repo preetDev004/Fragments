@@ -5,7 +5,6 @@ import logger from '../../logger';
 import { validateFragmentContent } from '../../utils/formatValidator';
 import * as contentType from 'content-type';
 
-
 const postFragmentsHandler = async (req: Request, res: Response): Promise<void> => {
   try {
     const { body } = req;

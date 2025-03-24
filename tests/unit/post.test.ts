@@ -30,7 +30,9 @@ describe('POST /v1/fragments', () => {
 
     expect(res.statusCode).toBe(201);
     expect(res.body.status).toBe('ok');
-    expect(res.headers['location']).toBe(`${process.env.API_URL}/v1/fragments/${res.body.fragment.id}`);
+    expect(res.headers['location']).toBe(
+      `${process.env.API_URL}/v1/fragments/${res.body.fragment.id}`
+    );
   });
 
   test('fragment metadata is correct', async () => {
@@ -93,7 +95,9 @@ describe('POST /v1/fragments', () => {
       .auth('user1@email.com', 'password1');
 
     // supertest uses http://127.0.0.1:${port} by default
-    expect(res.headers['location']).toMatch(/^http:\/\/127\.0\.0\.1:\d+\/v1\/fragments\/[A-Za-z0-9_-]+$/);
+    expect(res.headers['location']).toMatch(
+      /^http:\/\/127\.0\.0\.1:\d+\/v1\/fragments\/[A-Za-z0-9_-]+$/
+    );
 
     // Restore original API_URL
     process.env.API_URL = originalApiUrl;

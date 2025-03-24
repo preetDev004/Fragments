@@ -31,7 +31,7 @@ router.get('/', (req: Request, res: Response) => {
       // Use your own GitHub URL
       githubUrl: 'https://github.com/preetDev004/Fragments',
       version,
-      hostname: hostname()
+      hostname: hostname(),
     })
   );
 });
