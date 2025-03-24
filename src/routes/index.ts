@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-
+import { hostname } from 'os';
 // Import version and author from package.json
 import { version, author } from '../../package.json';
 
@@ -31,6 +31,7 @@ router.get('/', (req: Request, res: Response) => {
       // Use your own GitHub URL
       githubUrl: 'https://github.com/preetDev004/Fragments',
       version,
+      hostname: hostname()
     })
   );
 });

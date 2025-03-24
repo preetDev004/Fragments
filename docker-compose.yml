@@ -1,5 +1,4 @@
 # docker-compose.yml
-version: '3.8'
 services:
   # Fragments microservice API server
   fragments:
@@ -44,6 +43,7 @@ services:
   # LocalStack for S3, see https://docs.localstack.cloud/get-started/#docker-compose
   # Interact via awscli-local, see https://docs.localstack.cloud/integrations/aws-cli/#installation
   localstack:
+    container_name: localstack
     # https://hub.docker.com/r/localstack/localstack
     image: localstack/localstack
     ports:
