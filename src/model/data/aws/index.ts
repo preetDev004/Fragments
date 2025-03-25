@@ -135,12 +135,10 @@ export async function listFragments(
   // Configure query parameters
   const params: QueryCommandInput = {
     TableName: process.env.AWS_DYNAMODB_TABLE_NAME,
-    // Specify that we want to get all items where the ownerId is equal to the
-    // `:ownerId` that we'll define below in the ExpressionAttributeValues.
     KeyConditionExpression: 'ownerId = :ownerId',
-    // Use the `ownerId` value to do the query
+    // Use the proper DynamoDB attribute value format
     ExpressionAttributeValues: {
-      ':ownerId': ownerId,
+      ':ownerId': { S: ownerId },
     },
   };
 
@@ -159,7 +157,14 @@ export async function listFragments(
     // If we haven't expanded to include all attributes, remap this array from
     // [ {"id":"b9e7a264-630f-436d-a785-27f30233faea"}, {"id":"dad25b07-8cd6-498b-9aaf-46d358ea97fe"} ,... ] to
     // [ "b9e7a264-630f-436d-a785-27f30233faea", "dad25b07-8cd6-498b-9aaf-46d358ea97fe", ... ]
-    return !expand ? data?.Items!.map((item) => item.id) : data?.Items as unknown[];
+    // If we haven't expanded to include all attributes, extract just the id strings
+    if (!expand && data?.Items) {
+      // Extract the id value from each item object
+      return data.Items.map(item => item.id.S);
+    } 
+    
+    // Otherwise return the full items
+    return data?.Items || [];
   } catch (err) {
     logger.error({ err, params }, 'error getting all fragments for user from DynamoDB');
     throw err;
@@ -172,13 +177,13 @@ export async function deleteFragment(ownerId: string, id: string) {
     Bucket: process.env.AWS_S3_BUCKET_NAME as string,
     Key: `${ownerId}/${id}`,
   };
-  const dynamoDBParams : DeleteItemCommandInput = {
+  const dynamoDBParams: DeleteItemCommandInput = {
     TableName: process.env.AWS_DYNAMODB_TABLE_NAME,
     Key: {
       ownerId: { S: ownerId },
-      id: { S: id } 
+      id: { S: id },
     },
-  }
+  };
   try {
     const s3Command = new DeleteObjectCommand(s3Params);
     const dynamoDBCommand = new DeleteItemCommand(dynamoDBParams);
