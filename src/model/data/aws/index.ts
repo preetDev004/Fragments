@@ -1,6 +1,5 @@
-import { DeleteItemCommand, DeleteItemCommandInput, QueryCommand } from '@aws-sdk/client-dynamodb';
 import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
-import { GetCommand, PutCommand, QueryCommandInput } from '@aws-sdk/lib-dynamodb';
+import { DeleteCommand, GetCommand, PutCommand, QueryCommand, QueryCommandInput } from '@aws-sdk/lib-dynamodb';
 import { Response } from 'express';
 import { Readable } from 'stream';
 import logger from '../../../logger';
@@ -138,7 +137,7 @@ export async function listFragments(
     KeyConditionExpression: 'ownerId = :ownerId',
     // Use the proper DynamoDB attribute value format
     ExpressionAttributeValues: {
-      ':ownerId': { S: ownerId },
+      ':ownerId': ownerId,
     },
   };
 
@@ -160,9 +159,9 @@ export async function listFragments(
     // If we haven't expanded to include all attributes, extract just the id strings
     if (!expand && data?.Items) {
       // Extract the id value from each item object
-      return data.Items.map(item => item.id.S);
-    } 
-    
+      return data.Items.map((item) => item.id);
+    }
+
     // Otherwise return the full items
     return data?.Items || [];
   } catch (err) {
@@ -177,22 +176,19 @@ export async function deleteFragment(ownerId: string, id: string) {
     Bucket: process.env.AWS_S3_BUCKET_NAME as string,
     Key: `${ownerId}/${id}`,
   };
-  const dynamoDBParams: DeleteItemCommandInput = {
+  const dynamoDBParams = {
     TableName: process.env.AWS_DYNAMODB_TABLE_NAME,
-    Key: {
-      ownerId: { S: ownerId },
-      id: { S: id },
-    },
+    Key: { ownerId, id },
   };
   try {
     const s3Command = new DeleteObjectCommand(s3Params);
-    const dynamoDBCommand = new DeleteItemCommand(dynamoDBParams);
+    const dynamoDBCommand = new DeleteCommand(dynamoDBParams);
 
     await s3Client.send(s3Command);
     await ddbDocClient.send(dynamoDBCommand);
   } catch (err) {
     const { Bucket, Key } = s3Params;
-    logger.error({ err, Bucket, Key }, 'Error deleteing fragment data from S3 or DynamoDB');
+    logger.error({ err, Bucket, Key }, 'Error deleting fragment data from S3 or DynamoDB');
     throw new Error('unable to delete fragment data');
   }
 }
