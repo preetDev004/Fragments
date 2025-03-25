@@ -4,7 +4,7 @@ import logger from '../../../logger';
 /**
  * Credentials interface for AWS S3 client
  */
-interface AWSCredentials {
+export interface AWSCredentials {
   accessKeyId: string;
   secretAccessKey: string;
   sessionToken?: string;

@@ -31,7 +31,7 @@ export const validTypes = [
   */
 ];
 
-interface FragmentData {
+export interface FragmentData {
   id?: string;
   ownerId: string;
   created?: string;
