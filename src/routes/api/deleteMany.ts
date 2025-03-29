@@ -14,12 +14,12 @@ export const deleteUserFragmentsHandler = async (req: Request, res: Response): P
       res.status(400).json(createErrorResponse(400, 'No fragment IDs provided'));
       return;
     }
-
     const idArray: string[] = Array.isArray(idsParam)
       ? idsParam.map((id) => String(id)) // Ensure everything is a string
       : [String(idsParam)];
 
-    console.log('Received IDs to delete:', idArray);
+    // Check if the user is allowed to delete these
+    await Promise.all(idArray.map((id) => Fragment.byId(req.user! as string, id)));
 
     await Fragment.deleteMany(req.user! as string, idArray);
     res.status(200).json(createSuccessResponse());
