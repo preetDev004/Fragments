@@ -56,3 +56,15 @@ export function deleteFragment(ownerId: string, id: string) {
     data.del(ownerId, id),
   ]);
 }
+// Delete fragments metadata and data from memory db. Returns a Promise
+// Delete multiple fragments' metadata and data from memory db. Returns a Promise
+export function deleteFragments(ownerId: string, ids: string[]) {
+  return Promise.all(
+    ids.map((id) => 
+      Promise.all([
+        metadata.del(ownerId, id),
+        data.del(ownerId, id),
+      ])
+    )
+  );
+}

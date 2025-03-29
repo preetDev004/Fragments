@@ -14,6 +14,7 @@ import {
   writeFragment,
   writeFragmentData,
 } from './data/';
+import { deleteFragments } from './data/memory';
 
 export const validTypes = [
   `text/plain`,
@@ -97,6 +98,16 @@ class Fragment {
    */
   static delete(ownerId: string, id: string): Promise<[void, void]> {
     return deleteFragment(ownerId, id);
+  }
+
+    /**
+   * Delete the user's fragment data and metadata for the given id
+   * @param {string} ownerId user's hashed email
+   * @param {string} id fragment's id
+   * @returns Promise<void>
+   */
+  static deleteMany(ownerId: string, ids: string[]): Promise<[void, void][]> {
+    return deleteFragments(ownerId, ids);
   }
 
   /**

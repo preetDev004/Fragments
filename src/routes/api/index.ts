@@ -11,6 +11,7 @@ import { getUserFragmentInfoHandler } from './getByIdInfo';
 import { getConvertedUserFragmentHandler } from './getConverted';
 import logger from '../../logger';
 import { deleteUserFragmentHandler } from './deleteById';
+import { deleteUserFragmentsHandler } from './deleteMany';
 
 // Create a router to mount our API endpoints
 const router = Router();
@@ -29,6 +30,9 @@ router.get('/fragments/:id/info', getUserFragmentInfoHandler);
 
 // Define the DELETE /v1/fragments/:id route
 router.delete('/fragments/:id', deleteUserFragmentHandler);
+
+// Define the DELETE /v1/fragments/ route
+router.delete('/fragments', deleteUserFragmentsHandler);
 
 // Define the POST /v1/fragments route
 const rawBody = () =>

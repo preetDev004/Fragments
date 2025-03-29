@@ -4,7 +4,7 @@ import { createErrorResponse, createSuccessResponse, FragError } from '../../res
 import Fragment from '../../model/fragment';
 
 /**
- * Get a list of fragments for the current user.
+ * delete a fragment for the current user.
  */
 export const deleteUserFragmentHandler = async (req: Request, res: Response): Promise<void> => {
   try {
