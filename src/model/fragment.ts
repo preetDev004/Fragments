@@ -8,13 +8,13 @@ import * as contentType from 'content-type';
 // Functions for working with fragment metadata/data using our DB
 import {
   deleteFragment,
+  deleteFragments,
   listFragments,
   readFragment,
   readFragmentData,
   writeFragment,
   writeFragmentData,
 } from './data/';
-import { deleteFragments } from './data/memory';
 
 export const validTypes = [
   `text/plain`,

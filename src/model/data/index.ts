@@ -7,6 +7,7 @@ const getModule = () =>
 
 export const {
   deleteFragment,
+  deleteFragments,
   listFragments,
   readFragment,
   readFragmentData,

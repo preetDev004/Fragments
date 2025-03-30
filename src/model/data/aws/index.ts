@@ -1,5 +1,17 @@
-import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
-import { DeleteCommand, GetCommand, PutCommand, QueryCommand, QueryCommandInput } from '@aws-sdk/lib-dynamodb';
+import {
+  DeleteObjectCommand,
+  DeleteObjectsCommand,
+  GetObjectCommand,
+  PutObjectCommand,
+} from '@aws-sdk/client-s3';
+import {
+  BatchWriteCommand,
+  DeleteCommand,
+  GetCommand,
+  PutCommand,
+  QueryCommand,
+  QueryCommandInput,
+} from '@aws-sdk/lib-dynamodb';
 import { Response } from 'express';
 import { Readable } from 'stream';
 import logger from '../../../logger';
@@ -190,5 +202,41 @@ export async function deleteFragment(ownerId: string, id: string) {
     const { Bucket, Key } = s3Params;
     logger.error({ err, Bucket, Key }, 'Error deleting fragment data from S3 or DynamoDB');
     throw new Error('unable to delete fragment data');
+  }
+}
+
+// Delete multiple fragments' metadata and data from AWS. Returns a Promise
+export async function deleteFragments(ownerId: string, ids: string[]) {
+  try {
+    // Batch delete from S3
+    if (ids.length > 0) {
+      const s3Objects = ids.map((id) => ({ Key: `${ownerId}/${id}` }));
+      const s3Params = {
+        Bucket: process.env.AWS_S3_BUCKET_NAME as string,
+        Delete: { Objects: s3Objects },
+      };
+      await s3Client.send(new DeleteObjectsCommand(s3Params));
+    }
+
+    // For DynamoDB we need to use BatchWriteCommand
+    // Maximum 25 items per batch
+    for (let i = 0; i < ids.length; i += 25) {
+      const batch = ids.slice(i, i + 25);
+      const dynamoDBParams = {
+        RequestItems: {
+          [process.env.AWS_DYNAMODB_TABLE_NAME as string]: batch.map((id) => ({
+            DeleteRequest: {
+              Key: { ownerId, id },
+            },
+          })),
+        },
+      };
+      await ddbDocClient.send(new BatchWriteCommand(dynamoDBParams));
+    }
+
+    return true;
+  } catch (err) {
+    logger.error({ err, ownerId, ids }, 'Error batch deleting fragments from S3 or DynamoDB');
+    throw new Error(`unable to delete fragment data: ${(err as Error).message}`);
   }
 }
