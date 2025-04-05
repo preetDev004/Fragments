@@ -13,11 +13,12 @@ const postFragmentsHandler = async (req: Request, res: Response): Promise<void> 
       res.status(415).json(createErrorResponse(415, 'Unsupported content type'));
       return;
     }
+    const { type } = contentType.parse(req);
     const content = body.toString();
     logger.debug({ content }, 'Received fragment');
     const inValid = await validateFragmentContent(
-      contentType.parse(req).type as string,
-      body.toString()
+      type as string,
+      body
     );
     if (inValid) {
       throw new FragError(inValid, 400);

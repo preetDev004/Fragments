@@ -1,11 +1,12 @@
-import { validTypes } from '../model/fragment';
 import Papa from 'papaparse';
+import { validTypes } from '../model/fragment';
 
 export const validateFragmentContent = async (
   type: (typeof validTypes)[number],
-  content: string
+  content: Buffer
 ): Promise<string> => {
-  if (!content.trim()) return 'Content cannot be empty';
+  if (Buffer.isBuffer(content) && (content.length === 0 || content.toString().trim().length === 0))
+    return 'Content cannot be empty';
 
   switch (type) {
     case 'text/plain':
@@ -13,7 +14,7 @@ export const validateFragmentContent = async (
 
     case 'application/json':
       try {
-        JSON.parse(content);
+        JSON.parse(content.toString());
       } catch {
         return 'Invalid JSON format';
       }
@@ -32,8 +33,38 @@ export const validateFragmentContent = async (
       break;
 
     case 'text/csv':
-      if (!(await isCSV(content)).isValid) {
+      if (!(await isCSV(content.toString())).isValid) {
         return 'Invalid CSV format';
+      }
+      break;
+
+    case 'image/png':
+      if (!isPNG(content)) {
+        return 'Invalid PNG format';
+      }
+      break;
+
+    case 'image/jpeg':
+      if (!isJPEG(content)) {
+        return 'Invalid JPEG format';
+      }
+      break;
+
+    case 'image/webp':
+      if (!isWEBP(content)) {
+        return 'Invalid WEBP format';
+      }
+      break;
+
+    case 'image/gif':
+      if (!isGIF(content)) {
+        return 'Invalid GIF format';
+      }
+      break;
+
+    case 'image/avif':
+      if (!isAVIF(content)) {
+        return 'Invalid AVIF format';
       }
       break;
 
@@ -227,4 +258,100 @@ const isCSV = (text: string): Promise<{ isValid: boolean }> => {
       },
     });
   });
+};
+
+// Validate PNG format by checking the file signature
+const isPNG = (data: Buffer): boolean => {
+  if (!Buffer.isBuffer(data) || data.length < 8) {
+    return false;
+  }
+
+  // Check PNG signature: 89 50 4E 47 0D 0A 1A 0A
+  return (
+    data[0] === 0x89 &&
+    data[1] === 0x50 &&
+    data[2] === 0x4e &&
+    data[3] === 0x47 &&
+    data[4] === 0x0d &&
+    data[5] === 0x0a &&
+    data[6] === 0x1a &&
+    data[7] === 0x0a
+  );
+};
+
+// Validate JPEG format by checking the file signature
+const isJPEG = (data: Buffer): boolean => {
+  if (!Buffer.isBuffer(data) || data.length < 3) {
+    return false;
+  }
+
+  // JPEG starts with FF D8 FF
+  return data[0] === 0xff && data[1] === 0xd8 && data[2] === 0xff;
+};
+
+// Validate WebP format by checking the file signature
+const isWEBP = (data: Buffer): boolean => {
+  if (!Buffer.isBuffer(data) || data.length < 12) {
+    return false;
+  }
+
+  // Check WebP signature: RIFF....WEBP
+  return (
+    data[0] === 0x52 && // R
+    data[1] === 0x49 && // I
+    data[2] === 0x46 && // F
+    data[3] === 0x46 && // F
+    data[8] === 0x57 && // W
+    data[9] === 0x45 && // E
+    data[10] === 0x42 && // B
+    data[11] === 0x50 // P
+  );
+};
+
+// Validate GIF format by checking the file signature
+const isGIF = (data: Buffer): boolean => {
+  if (!Buffer.isBuffer(data) || data.length < 6) {
+    return false;
+  }
+
+  // Check for GIF87a or GIF89a signature
+  return (
+    data[0] === 0x47 && // G
+    data[1] === 0x49 && // I
+    data[2] === 0x46 && // F
+    data[3] === 0x38 && // 8
+    (data[4] === 0x37 || data[4] === 0x39) && // 7 or 9
+    data[5] === 0x61 // a
+  );
+};
+
+// Validate AVIF format by checking the file signature
+const isAVIF = (data: Buffer): boolean => {
+  if (!Buffer.isBuffer(data) || data.length < 12) {
+    return false;
+  }
+
+  // First check for the FTYPBOX signature
+  const hasFtypSignature =
+    data[4] === 0x66 && // f
+    data[5] === 0x74 && // t
+    data[6] === 0x79 && // y
+    data[7] === 0x70; // p
+
+  if (!hasFtypSignature) {
+    return false;
+  }
+
+  // Then look for 'avif' or 'avis' brand
+  // It can be at different positions, but typically occurs at offset 8 or 12
+  for (let i = 8; i < Math.min(data.length - 4, 24); i++) {
+    if (
+      (data[i] === 0x61 && data[i + 1] === 0x76 && data[i + 2] === 0x69 && data[i + 3] === 0x66) || // 'avif'
+      (data[i] === 0x61 && data[i + 1] === 0x76 && data[i + 2] === 0x69 && data[i + 3] === 0x73) // 'avis'
+    ) {
+      return true;
+    }
+  }
+
+  return false;
 };
