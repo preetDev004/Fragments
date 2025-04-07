@@ -16,20 +16,20 @@ describe('DELETE /v1/fragments (delete many)', () => {
       .auth('invalid@email.com', 'incorrect_password');
     expect(res.statusCode).toBe(401);
   });
-  
+
   test('No fragment ids provided', async () => {
     const res = await request(app)
       .delete('/v1/fragments?ids=')
       .auth('user1@email.com', 'password1');
     expect(res.statusCode).toBe(400);
   });
-  
+
   test('Access Denied to other user fragment deletion', async () => {
     const postRes = await request(app)
-    .post('/v1/fragments')
-    .set('Content-Type', 'text/plain')
-    .send('testing data')
-    .auth('user1@email.com', 'password1');
+      .post('/v1/fragments')
+      .set('Content-Type', 'text/plain')
+      .send('testing data')
+      .auth('user1@email.com', 'password1');
 
     const res = await request(app)
       .delete(`/v1/fragments?ids=${postRes.body.fragment.id}`)
@@ -79,7 +79,7 @@ describe('DELETE /v1/fragments (delete many)', () => {
   });
 
   // Users should not be allowed to delete fragments that do not belong to them
-  test("users cannot delete fragments belonging to other users", async () => {
+  test('users cannot delete fragments belonging to other users', async () => {
     // Create a fragment as user1
     const postRes = await request(app)
       .post('/v1/fragments')

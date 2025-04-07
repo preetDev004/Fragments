@@ -26,10 +26,16 @@ export const validTypes = [
   `image/png`,
   `image/jpeg`,
   `image/webp`,
-  "image/avif",
+  'image/avif',
   `image/gif`,
-  
 ];
+export const VALID_FRAGMENT_CONVERSIONS: Record<string, string[]> = {
+  'text/markdown': ['text/html', 'text/plain'],
+  'text/html': ['text/plain'],
+  'text/csv': ['text/plain', 'application/json'],
+  'application/json': ['text/plain', 'text/yaml'],
+  'application/yaml': ['text/plain'],
+};
 
 export interface FragmentData {
   id?: string;
@@ -99,7 +105,7 @@ class Fragment {
     return deleteFragment(ownerId, id);
   }
 
-    /**
+  /**
    * Delete the user's fragment data and metadata for the given id
    * @param {string} ownerId user's hashed email
    * @param {string} id fragment's id
@@ -165,7 +171,9 @@ class Fragment {
    * @returns {Array<string>} list of supported mime types
    */
   get formats(): Array<string> {
-    return [this.mimeType];
+    const baseType = this.mimeType;
+    const conversions = VALID_FRAGMENT_CONVERSIONS[baseType] || [];
+    return [baseType, ...conversions];
   }
 
   /**

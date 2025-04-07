@@ -16,15 +16,10 @@ const postFragmentsHandler = async (req: Request, res: Response): Promise<void> 
     const { type } = contentType.parse(req);
     const content = body.toString();
     logger.debug({ content }, 'Received fragment');
-    const inValid = await validateFragmentContent(
-      type as string,
-      body
-    );
+    const inValid = await validateFragmentContent(type as string, body);
     if (inValid) {
       throw new FragError(inValid, 400);
     }
-
-    logger.debug({ body }, 'Received fragment');
     const fragment = new Fragment({
       ownerId: req.user! as string,
       type: req.headers['content-type']! as string,
@@ -33,7 +28,6 @@ const postFragmentsHandler = async (req: Request, res: Response): Promise<void> 
 
     await fragment.setData(body);
     await fragment.save();
-    logger.debug({ fragment }, 'Fragment saved');
 
     const apiUrl = process.env.API_URL || `${req.protocol}://${req.headers.host}`;
 

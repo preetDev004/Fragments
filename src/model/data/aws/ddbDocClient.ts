@@ -4,7 +4,7 @@ import logger from '../../../logger';
 import { AWSCredentials } from './s3Client';
 
 /**
- * If AWS credentials are configured in the environment, use them. 
+ * If AWS credentials are configured in the environment, use them.
  * Needed for local testing or connecting to LocalStack/DynamoDB Local.
  * @returns AWSCredentials | undefined
  */
