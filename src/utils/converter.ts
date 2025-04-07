@@ -44,6 +44,7 @@ export function htmlToText(content: string): string {
     .replace(/&lt;/g, '<') // Replace HTML entities
     .replace(/&gt;/g, '>')
     .replace(/&amp;/g, '&')
+    .replace(/&quot;/g, '"') // Add this line to convert &quot; to "
     .trim();
 }
 
