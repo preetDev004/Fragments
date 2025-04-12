@@ -12,6 +12,7 @@ import {
   markdownToHtml,
   markdownToText,
   yamlToText,
+  convertImage, // Add this import
 } from '../../utils/converter';
 
 export const getConvertedUserFragmentHandler = async (
@@ -38,34 +39,36 @@ export const getConvertedUserFragmentHandler = async (
 
     // Get fragment data
     const data = await fragment.getData();
-    const content = data.toString();
-    let convertedContent: string;
+    let convertedContent: string | Buffer = data;
 
     // Handle conversions
     if (sourceType === targetType) {
       // No conversion needed
-      convertedContent = content;
+      convertedContent = data;
+    } else if (sourceType.startsWith('image/') && targetType.startsWith('image/')) {
+      // Handle image conversions
+      convertedContent = await convertImage(data, sourceType, targetType);
     } else if (sourceType === 'text/markdown' && targetType === 'text/html') {
-      convertedContent = markdownToHtml(content);
+      convertedContent = markdownToHtml(data.toString());
     } else if (sourceType === 'text/markdown' && targetType === 'text/plain') {
-      convertedContent = markdownToText(content);
+      convertedContent = markdownToText(data.toString());
     } else if (sourceType === 'text/html' && targetType === 'text/plain') {
-      convertedContent = htmlToText(content);
+      convertedContent = htmlToText(data.toString());
     } else if (sourceType === 'text/csv' && targetType === 'text/plain') {
-      convertedContent = csvToText(content);
+      convertedContent = csvToText(data.toString());
     } else if (sourceType === 'text/csv' && targetType === 'application/json') {
-      convertedContent = csvToJson(content);
+      convertedContent = csvToJson(data.toString());
     } else if (sourceType === 'application/json' && targetType === 'text/plain') {
-      convertedContent = jsonToText(content);
+      convertedContent = jsonToText(data.toString());
     } else if (sourceType === 'application/json' && targetType === 'text/yaml') {
-      convertedContent = jsonToYaml(content);
+      convertedContent = jsonToYaml(data.toString());
     } else if (sourceType === 'application/yaml' && targetType === 'text/plain') {
-      convertedContent = yamlToText(content);
+      convertedContent = yamlToText(data.toString());
     } else {
       throw new FragError(`Conversion from ${sourceType} to ${targetType} is not implemented`, 500);
     }
 
-    logger.debug({ sourceType, targetType, convertedContent }, 'Conversion completed');
+    logger.debug({ sourceType, targetType }, 'Conversion completed');
 
     // Set Content-Type header based on the target type
     res.setHeader('Content-Type', targetType);

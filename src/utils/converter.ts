@@ -1,5 +1,6 @@
 import MarkdownIt from 'markdown-it';
 import yaml from 'js-yaml'; // You'll need to install this package
+import sharp from 'sharp';
 
 // Helper function to convert extension to mime type
 export function extToMimeType(ext: string): string {
@@ -11,6 +12,13 @@ export function extToMimeType(ext: string): string {
     yml: 'text/yaml',
     md: 'text/markdown',
     csv: 'text/csv',
+    // Add image formats
+    png: 'image/png',
+    jpg: 'image/jpeg',
+    jpeg: 'image/jpeg',
+    webp: 'image/webp',
+    avif: 'image/avif',
+    gif: 'image/gif',
   };
 
   return extToMimeMap[ext] || `text/${ext}`;
@@ -93,4 +101,38 @@ export function jsonToText(content: string): string {
 // YAML to plain text
 export function yamlToText(content: string): string {
   return content;
+}
+
+// Image conversion functions
+export async function convertImage(
+  buffer: Buffer,
+  sourceType: string,
+  targetType: string
+): Promise<Buffer> {
+  // Initialize Sharp with the source buffer
+  let image = sharp(buffer);
+
+  // Convert to target format
+  switch (targetType) {
+    case 'image/jpeg':
+      image = image.jpeg();
+      break;
+    case 'image/png':
+      image = image.png();
+      break;
+    case 'image/webp':
+      image = image.webp();
+      break;
+    case 'image/gif':
+      image = image.gif();
+      break;
+    case 'image/avif':
+      image = image.avif();
+      break;
+    default:
+      throw new Error(`Unsupported target image format: ${targetType}`);
+  }
+
+  // Return the processed image as a buffer
+  return image.toBuffer();
 }
